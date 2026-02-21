@@ -23,10 +23,10 @@ description: >- # used by seo meta and the atom feed
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: "https://cysesaas.github.io"
+url: "https://monas-ai.github.io"
 
 github:
-  username: cysesaas # change to your GitHub username
+  username: monas-ai # change to your GitHub username
 
 twitter:
   username: twitter_username # change to your Twitter username
@@ -151,7 +151,7 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-baseurl: "/monas-ai-blog"
+baseurl: ""
 
 # ------------ The following options are not recommended to be modified ------------------
 
