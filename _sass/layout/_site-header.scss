@@ -1,0 +1,152 @@
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as mx;
+@use '../abstracts/breakpoints' as bp;
+
+// Site Header (Main Navigation)
+.site-header {
+  background-color: var(--topbar-bg);
+  border-bottom: 1px solid var(--sidebar-border-color);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: v.$topbar-height;
+  padding: 0 1rem; // ← Key fix: Add horizontal padding
+  max-width: 100%;
+  
+  @include bp.md {
+    padding: 0 1.5rem; // More padding on tablets
+  }
+  
+  @include bp.lg {
+    padding: 0 2rem; // Even more on desktop
+  }
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0; // Prevent shrinking
+}
+
+.mobile-only {
+  display: block;
+  
+  @include bp.lg {
+    display: none;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0; // Prevent logo from shrinking
+}
+
+.logo-mark {
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.logo-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0; // Allow text truncation if needed
+}
+
+.logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  line-height: 1.2;
+  white-space: nowrap;
+  
+  @include bp.sm {
+    font-size: 1.5rem;
+  }
+}
+
+.logo-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  white-space: nowrap;
+  
+  @include bp.lt(bp.get(sm)) {
+    display: none; // Hide tagline on very small screens
+  }
+  
+  @include bp.sm {
+    font-size: 0.75rem;
+  }
+}
+
+.header-nav {
+  display: none;
+  
+  @include bp.lg {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0; // Prevent shrinking
+}
+
+.icon-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0; // Prevent icons from shrinking
+  
+  &:hover {
+    background-color: var(--sidebar-hover-bg);
+  }
+  
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+.search-pill {
+  display: none;
+  
+  @include bp.md {
+    display: flex;
+  }
+}
+
+#search-cancel {
+  display: none;
+}
