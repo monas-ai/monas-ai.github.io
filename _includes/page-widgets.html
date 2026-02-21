@@ -1,0 +1,22 @@
+﻿<!-- Page rail widgets -->
+
+<aside class="page-rail">
+  <div class="rail-card">
+    <div class="rail-title">Browse</div>
+    <div class="rail-links">
+      <a href="{{ '/categories/' | relative_url }}">Categories</a>
+      <a href="{{ '/tags/' | relative_url }}">Tags</a>
+      <a href="{{ '/archives/' | relative_url }}">Archive</a>
+      <a href="{{ '/feeds/' | relative_url }}">Subscribe</a>
+    </div>
+  </div>
+
+  <div class="rail-card">
+    <div class="rail-title">Latest posts</div>
+    <div class="rail-links">
+      {% for post in site.posts limit: 4 %}
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</aside>

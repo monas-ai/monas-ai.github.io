@@ -1,10 +1,12 @@
-<!-- The Search results -->
+﻿<!-- The Search results -->
 
-<div id="search-result-wrapper" class="d-flex justify-content-center d-none">
-  <div class="col-11 content">
-    <div id="search-hints">
-      {% include_cached trending-tags.html lang=include.lang %}
+<div id="search-result-wrapper" class="search-overlay d-none">
+  <div class="site-container">
+    <div class="search-panel">
+      <div id="search-hints" class="search-hints">
+        {% include_cached trending-tags.html lang=include.lang %}
+      </div>
+      <div id="search-results" class="search-results"></div>
     </div>
-    <div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div>
   </div>
 </div>

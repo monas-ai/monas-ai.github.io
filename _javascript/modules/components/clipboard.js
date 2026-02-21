@@ -7,7 +7,7 @@
 
 import Tooltip from 'bootstrap/js/src/tooltip';
 
-const clipboardSelector = '.code-header>button';
+const clipboardSelector = '.code-actions button[aria-label=\"copy\"]';
 
 const ICON_DEFAULT = 'far fa-clipboard';
 const ICON_SUCCESS = 'fas fa-check';
@@ -67,8 +67,9 @@ function setCodeClipboard() {
   // Initial the clipboard.js object
   const clipboard = new ClipboardJS(clipboardSelector, {
     target: (trigger) => {
-      const codeBlock = trigger.parentNode.nextElementSibling;
-      return codeBlock.querySelector('code .rouge-code');
+      const header = trigger.closest('.code-header');
+      const codeBlock = header?.nextElementSibling;
+      return codeBlock?.querySelector('code .rouge-code');
     }
   });
 
@@ -97,6 +98,14 @@ function setCodeClipboard() {
       resumeIcon(trigger);
       unlock(trigger);
     }, TIMEOUT);
+
+    const label = trigger.parentNode.querySelector('[data-label-text]');
+    const language = label?.dataset?.labelText || 'unknown';
+    document.dispatchEvent(
+      new CustomEvent('code:copied', {
+        detail: { language }
+      })
+    );
   });
 }
 
@@ -129,6 +138,12 @@ function setLinkClipboard() {
         target.setAttribute(ATTR_TITLE_ORIGIN, defaultTitle);
         unlock(target);
       }, TIMEOUT);
+
+      document.dispatchEvent(
+        new CustomEvent('link:copied', {
+          detail: { url: window.location.href }
+        })
+      );
     });
   });
 

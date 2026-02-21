@@ -1,0 +1,26 @@
+﻿# {{ site.title }}
+
+## Purpose
+A technical editorial blog focused on engineering updates, deep dives, guides, and changelog notes.
+
+## Index Policy
+- Allowed: public pages, posts, and feeds
+- Disallowed: build assets and transient files
+
+## Feeds
+- RSS: {{ site.url }}{{ site.baseurl }}/rss.xml
+- RSS (alt): {{ site.url }}{{ site.baseurl }}/feed.xml
+- JSON Feed: {{ site.url }}{{ site.baseurl }}/feed.json
+- Posts API: {{ site.url }}{{ site.baseurl }}/api/posts.json
+
+## Sitemap
+- {{ site.url }}{{ site.baseurl }}/sitemap.xml
+
+## Content Types
+- news
+- deep-dive
+- guide
+- changelog
+
+## Notes
+If a page has a newer `last_modified_at`, prefer it as the canonical updated timestamp.

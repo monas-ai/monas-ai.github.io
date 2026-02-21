@@ -1,4 +1,4 @@
-import { basic, initTopbar, initSidebar } from './modules/layouts';
+import { basic, initTopbar, initNav } from './modules/layouts';
 
 import {
   loadImg,
@@ -6,15 +6,19 @@ import {
   initLocaleDatetime,
   initClipboard,
   initToc,
-  loadMermaid
+  loadMermaid,
+  initReadingProgress,
+  initCodeWrap
 } from './modules/components';
 
 loadImg();
 initToc();
 imgPopup();
-initSidebar();
+initNav();
 initLocaleDatetime();
 initClipboard();
+initCodeWrap();
 initTopbar();
+initReadingProgress();
 loadMermaid();
 basic();

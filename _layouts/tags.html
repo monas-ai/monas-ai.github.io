@@ -1,9 +1,9 @@
----
+﻿---
 layout: page
 # All the Tags of posts.
 ---
 
-<div id="tags" class="d-flex flex-wrap mx-xl-2">
+<div id="tags" class="chip-row tag-cloud">
   {% assign tags = '' | split: '' %}
   {% for t in site.tags %}
     {% assign tags = tags | push: t[0] %}
@@ -12,11 +12,9 @@ layout: page
   {% assign sorted_tags = tags | sort_natural %}
 
   {% for t in sorted_tags %}
-    <div>
-      <a class="tag" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
-        {{ t -}}
-        <span class="text-muted">{{ site.tags[t].size }}</span>
-      </a>
-    </div>
+    <a class="chip" href="{{ t | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
+      {{ t -}}
+      <span class="count">{{ site.tags[t].size }}</span>
+    </a>
   {% endfor %}
 </div>

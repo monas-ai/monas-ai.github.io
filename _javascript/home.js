@@ -1,8 +1,10 @@
-import { basic, initSidebar, initTopbar } from './modules/layouts';
-import { initLocaleDatetime, loadImg } from './modules/components';
+import { basic, initNav, initTopbar } from './modules/layouts';
+import { initLocaleDatetime, loadImg, initHomeFilters, initHomeCarousel } from './modules/components';
 
 loadImg();
 initLocaleDatetime();
-initSidebar();
+initNav();
 initTopbar();
+initHomeFilters();
+initHomeCarousel();
 basic();

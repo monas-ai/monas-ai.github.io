@@ -1,110 +1,81 @@
-/**
- * This script make #search-result-wrapper switch to unload or shown automatically.
+﻿/**
+ * Search overlay display and input handling.
  */
 
-const btnSbTrigger = document.getElementById('sidebar-trigger');
+const btnNavTrigger = document.getElementById('nav-trigger');
 const btnSearchTrigger = document.getElementById('search-trigger');
 const btnCancel = document.getElementById('search-cancel');
-const content = document.querySelectorAll('#main-wrapper>.container>.row');
-const topbarTitle = document.getElementById('topbar-title');
-const search = document.getElementById('search');
+const searchPill = document.querySelector('.search-pill');
 const resultWrapper = document.getElementById('search-result-wrapper');
 const results = document.getElementById('search-results');
 const input = document.getElementById('search-input');
 const hints = document.getElementById('search-hints');
 
-// CSS class names
-const LOADED = 'd-block';
-const UNLOADED = 'd-none';
-const FOCUS = 'input-focus';
-const FLEX = 'd-flex';
-
-/* Actions in mobile screens (Sidebar hidden) */
-class MobileSearchBar {
-  static on() {
-    btnSbTrigger.classList.add(UNLOADED);
-    topbarTitle.classList.add(UNLOADED);
-    btnSearchTrigger.classList.add(UNLOADED);
-    search.classList.add(FLEX);
-    btnCancel.classList.add(LOADED);
-  }
-
-  static off() {
-    btnCancel.classList.remove(LOADED);
-    search.classList.remove(FLEX);
-    btnSbTrigger.classList.remove(UNLOADED);
-    topbarTitle.classList.remove(UNLOADED);
-    btnSearchTrigger.classList.remove(UNLOADED);
-  }
+function openSearch() {
+  document.body.classList.add('search-open');
+  resultWrapper?.classList.remove('d-none');
+  btnCancel?.classList.add('show');
+  btnNavTrigger?.classList.add('d-none');
+  searchPill?.classList.add('is-active');
+  input?.focus();
 }
 
-class ResultSwitch {
-  static resultVisible = false;
+function closeSearch() {
+  document.body.classList.remove('search-open');
+  resultWrapper?.classList.add('d-none');
+  btnCancel?.classList.remove('show');
+  btnNavTrigger?.classList.remove('d-none');
+  searchPill?.classList.remove('is-active');
 
-  static on() {
-    if (!this.resultVisible) {
-      resultWrapper.classList.remove(UNLOADED);
-      content.forEach((el) => {
-        el.classList.add(UNLOADED);
-      });
-      this.resultVisible = true;
-    }
+  if (results) {
+    results.innerHTML = '';
   }
 
-  static off() {
-    if (this.resultVisible) {
-      results.innerHTML = '';
-
-      if (hints.classList.contains(UNLOADED)) {
-        hints.classList.remove(UNLOADED);
-      }
-
-      resultWrapper.classList.add(UNLOADED);
-      content.forEach((el) => {
-        el.classList.remove(UNLOADED);
-      });
-      input.textContent = '';
-      this.resultVisible = false;
-    }
+  if (hints) {
+    hints.classList.remove('d-none');
   }
-}
 
-function isMobileView() {
-  return btnCancel.classList.contains(LOADED);
+  if (input) {
+    input.value = '';
+  }
 }
 
 export function displaySearch() {
-  btnSearchTrigger.addEventListener('click', () => {
-    MobileSearchBar.on();
-    ResultSwitch.on();
-    input.focus();
-  });
+  if (!btnSearchTrigger || !input) {
+    return;
+  }
 
-  btnCancel.addEventListener('click', () => {
-    MobileSearchBar.off();
-    ResultSwitch.off();
-  });
-
-  input.addEventListener('focus', () => {
-    search.classList.add(FOCUS);
-  });
-
-  input.addEventListener('focusout', () => {
-    search.classList.remove(FOCUS);
-  });
+  btnSearchTrigger.addEventListener('click', openSearch);
+  searchPill?.addEventListener('click', openSearch);
+  input.addEventListener('focus', openSearch);
+  btnCancel?.addEventListener('click', closeSearch);
 
   input.addEventListener('input', () => {
+    if (!hints) {
+      return;
+    }
+
     if (input.value === '') {
-      if (isMobileView()) {
-        hints.classList.remove(UNLOADED);
-      } else {
-        ResultSwitch.off();
+      hints.classList.remove('d-none');
+      if (!document.body.classList.contains('search-open')) {
+        closeSearch();
       }
     } else {
-      ResultSwitch.on();
-      if (isMobileView()) {
-        hints.classList.add(UNLOADED);
+      if (!document.body.classList.contains('search-open')) {
+        openSearch();
       }
+      hints.classList.add('d-none');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== input) {
+      e.preventDefault();
+      openSearch();
+    }
+
+    if (e.key === 'Escape') {
+      closeSearch();
     }
   });
 }

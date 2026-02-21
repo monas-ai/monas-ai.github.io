@@ -1,0 +1,43 @@
+﻿<!-- Post rail widgets -->
+
+<aside class="post-rail">
+  <div class="rail-card rail-combo">
+    <div class="rail-title">Reading progress</div>
+    <div class="rail-progress">
+      <div class="rail-progress-bar" id="reading-progress-rail"></div>
+    </div>
+    <div class="rail-meta">
+      <span id="reading-progress-value">0%</span>
+      <span>Complete</span>
+    </div>
+    <div class="rail-divider"></div>
+    <div class="rail-list">
+      <div><span>Read time</span><strong>{{ read_time }} min</strong></div>
+      <div><span>Words</span><strong>{{ words }}</strong></div>
+      {% if page.last_modified_at and page.last_modified_at != page.date %}
+        <div><span>Updated</span><strong>{% include datetime.html date=page.last_modified_at lang=lang %}</strong></div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% include toc.html lang=lang %}
+
+  <div class="rail-card">
+    <div class="rail-title">Related posts</div>
+    <div class="rail-links">
+      {% assign related = site.posts | where_exp: 'item', 'item.url != page.url' %}
+      {% for post in related limit: 4 %}
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="rail-card">
+    <div class="rail-title">Latest posts</div>
+    <div class="rail-links">
+      {% for post in site.posts limit: 4 %}
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% endfor %}
+    </div>
+  </div>
+</aside>

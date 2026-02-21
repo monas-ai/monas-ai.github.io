@@ -1,3 +1,3 @@
-export { basic } from './layouts/basic';
-export { initSidebar } from './layouts/sidebar';
+﻿export { basic } from './layouts/basic';
+export { initNav } from './layouts/nav';
 export { initTopbar } from './layouts/topbar';

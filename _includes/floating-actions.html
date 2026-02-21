@@ -1,0 +1,28 @@
+﻿<!-- Floating actions -->
+
+<div class="floating-actions" id="floating-actions" aria-label="Floating actions">
+  <button
+    id="copy-link"
+    class="action-btn"
+    aria-label="Copy link"
+    data-bs-toggle="tooltip"
+    data-bs-placement="left"
+    title="{{ site.data.locales[include.lang].post.button.share_link.title }}"
+    data-title-succeed="{{ site.data.locales[include.lang].post.button.share_link.succeed }}"
+  >
+    <i class="fas fa-link"></i>
+  </button>
+
+  {% capture title %}{{ page.title }} - {{ site.title }}{% endcapture %}
+  {% assign title = title | uri_escape %}
+  {% assign url = page.url | absolute_url | url_encode %}
+
+  {% for share in site.data.share.platforms %}
+    {% if share.type == 'Twitter' or share.type == 'Linkedin' %}
+      {% assign link = share.link | replace: 'TITLE', title | replace: 'URL', url %}
+      <a class="action-btn" href="{{ link }}" target="_blank" rel="noopener" data-share="{{ share.type }}">
+        <i class="{{ share.icon }}"></i>
+      </a>
+    {% endif %}
+  {% endfor %}
+</div>

@@ -1,0 +1,82 @@
+﻿<!-- Site Header -->
+
+<header class="site-header header-smart" aria-label="Site Header">
+  <div class="site-container header-inner">
+    <div class="header-left">
+      <button id="nav-trigger" class="icon-btn mobile-only" type="button" aria-label="Open navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+
+      <a class="logo" href="{{ '/' | relative_url }}" aria-label="{{ site.title }}">
+        <span class="logo-mark"></span>
+        <div class="logo-stack">
+          <span class="logo-text" id="site-title">{{ site.title }}</span>
+          <span class="logo-sub">{{ site.tagline }}</span>
+        </div>
+      </a>
+    </div>
+
+    <nav class="header-nav" aria-label="Primary">
+      <div class="nav-item has-dropdown">
+        <button class="nav-link" type="button" aria-haspopup="true" aria-expanded="false">
+          Categories
+          <i class="fas fa-angle-down"></i>
+        </button>
+        <div class="nav-dropdown">
+          {% assign sorted_categories = site.categories | sort %}
+          {% if sorted_categories.size == 0 %}
+            <span class="nav-empty">No categories yet</span>
+          {% else %}
+            {% for category in sorted_categories %}
+              {% assign cat_name = category | first %}
+              <a href="{{ '/categories/' | append: cat_name | slugify | append: '/' | relative_url }}">
+                {{ cat_name }}
+                <span class="count">{{ category[1].size }}</span>
+              </a>
+            {% endfor %}
+          {% endif %}
+          <a class="nav-footer" href="{{ '/categories/' | relative_url }}">View all categories</a>
+        </div>
+      </div>
+
+      <a class="nav-link{% if page.url contains '/tags' %} is-active{% endif %}" href="{{ '/tags/' | relative_url }}">
+        Tags
+      </a>
+      <a class="nav-link{% if page.url contains '/about' %} is-active{% endif %}" href="{{ '/about/' | relative_url }}">
+        About
+      </a>
+      <a class="nav-link{% if page.url contains '/feeds' %} is-active{% endif %}" href="{{ '/feeds/' | relative_url }}">
+        Subscribe
+      </a>
+    </nav>
+
+    <div class="header-actions">
+      <div class="search-pill">
+        <i class="fas fa-search"></i>
+        <input
+          class="form-control"
+          id="search-input"
+          type="search"
+          aria-label="search"
+          autocomplete="off"
+          placeholder="{{ site.data.locales[include.lang].search.hint | capitalize }}..."
+        >
+        <span class="kbd-hint">/</span>
+      </div>
+
+      <button type="button" id="search-trigger" class="icon-btn" aria-label="Search">
+        <i class="fas fa-search"></i>
+      </button>
+
+      <button type="button" class="btn btn-link text-decoration-none" id="search-cancel">
+        {{- site.data.locales[include.lang].search.cancel -}}
+      </button>
+
+      {% unless site.theme_mode %}
+        <button type="button" class="icon-btn" aria-label="Switch Mode" id="mode-toggle">
+          <i class="fas fa-adjust"></i>
+        </button>
+      {% endunless %}
+    </div>
+  </div>
+</header>

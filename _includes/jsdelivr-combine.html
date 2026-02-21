@@ -1,10 +1,19 @@
-{% assign urls = include.urls | split: ',' %}
+{% assign urls = include.urls
+  | replace: '[', ''
+  | replace: ']', ''
+  | replace: '"', ''
+  | split: ','
+%}
 
 {% assign combined_urls = null %}
 
 {% assign domain = 'https://cdn.jsdelivr.net/' %}
 
 {% for url in urls %}
+  {% assign url = url | strip | replace: ' ', '' %}
+  {% if url == '' %}
+    {% continue %}
+  {% endif %}
   {% if url contains domain %}
     {% assign url_snippet = url | slice: domain.size, url.size %}
 

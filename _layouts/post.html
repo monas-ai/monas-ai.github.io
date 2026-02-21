@@ -1,10 +1,5 @@
----
+﻿---
 layout: default
-panel_includes:
-  - toc
-tail_includes:
-  - related-posts
-  - post-nav
 script_includes:
   - comment
 ---
@@ -13,88 +8,85 @@ script_includes:
 
 {% include toc-status.html %}
 
-<article class="px-1" data-toc="{{ enable_toc }}">
-  <header>
-    <h1 data-toc-skip>{{ page.title }}</h1>
+{% assign words = content | strip_html | number_of_words: 'auto' %}
+{% assign wpm = 180 %}
+{% assign read_time = words | divided_by: wpm %}
+{% unless read_time > 0 %}{% assign read_time = 1 %}{% endunless %}
+
+{% assign content_type = page.content_type | default: page.type %}
+{% unless content_type %}
+  {% assign first_cat = page.categories | first | downcase %}
+  {% if first_cat contains 'news' %}
+    {% assign content_type = 'news' %}
+  {% elsif first_cat contains 'guide' %}
+    {% assign content_type = 'guide' %}
+  {% elsif first_cat contains 'change' or first_cat contains 'note' %}
+    {% assign content_type = 'changelog' %}
+  {% else %}
+    {% assign content_type = 'deep-dive' %}
+  {% endif %}
+{% endunless %}
+
+<div id="reading-progress" aria-hidden="true"></div>
+
+<div class="site-container">
+<article class="post" data-toc="{{ enable_toc }}" data-post-slug="{{ page.slug }}" data-post-category="{{ page.categories | first }}" data-post-tags="{{ page.tags | join: ',' }}" data-content-type="{{ content_type }}" data-reading-time="{{ read_time }}">
+  <header class="post-hero">
+    <nav class="breadcrumb">
+      <a href="{{ '/' | relative_url }}">Home</a>
+      {% if page.categories.size > 0 %}
+        <span>/</span>
+        <a href="{{ site.baseurl }}/categories/{{ page.categories | first | slugify | url_encode }}/">
+          {{ page.categories | first }}
+        </a>
+      {% endif %}
+      <span>/</span>
+      <span>{{ page.title }}</span>
+    </nav>
+
+    <p class="eyebrow">{{ content_type | replace: '-', ' ' }}</p>
+    <h1>{{ page.title }}</h1>
+
     {% if page.description %}
-      <p class="post-desc fw-light mb-4">{{ page.description }}</p>
+      <p class="post-desc">{{ page.description }}</p>
     {% endif %}
 
-    <div class="post-meta text-muted">
-      <!-- published date -->
-      <span>
+    <div class="post-meta">
+      <span class="meta-item">
         {{ site.data.locales[lang].post.posted }}
         {% include datetime.html date=page.date tooltip=true lang=lang %}
       </span>
 
-      <!-- lastmod date -->
       {% if page.last_modified_at and page.last_modified_at != page.date %}
-        <span>
+        <span class="meta-item">
           {{ site.data.locales[lang].post.updated }}
           {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
         </span>
       {% endif %}
 
-      {% if page.image %}
-        {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
-        {% capture class %}class="preview-img{% if page.image.no_bg %}{{ ' no-bg' }}{% endif %}"{% endcapture %}
-        {% capture alt %}alt="{{ page.image.alt | xml_escape | default: "Preview Image" }}"{% endcapture %}
-
-        {% if page.image.lqip %}
-          {%- capture lqip -%}lqip="{{ page.image.lqip }}"{%- endcapture -%}
-        {% endif %}
-
-        <div class="mt-3 mb-3">
-          <img {{ src }} {{ class }} {{ alt }} w="1200" h="630" {{ lqip }}>
-          {%- if page.image.alt -%}
-            <figcaption class="text-center pt-2 pb-2">{{ page.image.alt }}</figcaption>
-          {%- endif -%}
-        </div>
-      {% endif %}
-
-      <div class="d-flex justify-content-between">
-        <!-- author(s) -->
-        <span>
-          {% if page.author %}
-            {% assign authors = page.author %}
-          {% elsif page.authors %}
-            {% assign authors = page.authors %}
-          {% endif %}
-
-          {{ site.data.locales[lang].post.written_by }}
-
-          <em>
-            {% if authors %}
-              {% for author in authors %}
-                {% if site.data.authors[author].url -%}
-                  <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
-                {%- else -%}
-                  {{ site.data.authors[author].name }}
-                {%- endif %}
-                {% unless forloop.last %}{{ '</em>, <em>' }}{% endunless %}
-              {% endfor %}
-            {% else %}
-              <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
-            {% endif %}
-          </em>
-        </span>
-
-        <div>
-          <!-- pageviews -->
-          {% if site.pageviews.provider and site.analytics[site.pageviews.provider].id %}
-            <span>
-              <em id="pageviews">
-                <i class="fas fa-spinner fa-spin small"></i>
-              </em>
-              {{ site.data.locales[lang].post.pageview_measure }}
-            </span>
-          {% endif %}
-
-          <!-- read time -->
-          {% include read-time.html content=content prompt=true lang=lang %}
-        </div>
-      </div>
+      <span class="meta-item">{{ read_time }} {{ site.data.locales[lang].post.read_time.unit }}</span>
+      <span class="meta-item">{{ words }} {{ site.data.locales[lang].post.words }}</span>
     </div>
+
+    {% if page.tags.size > 0 %}
+      <div class="chip-row post-tags">
+        {% for tag in page.tags %}
+          <a class="chip" href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/">{{ tag }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if page.image %}
+      {% capture src %}{{ page.image.path | default: page.image }}{% endcapture %}
+      {% capture alt %}{{ page.image.alt | xml_escape | default: "Preview Image" }}{% endcapture %}
+      {% capture img_url %}{% include media-url.html src=src subpath=page.media_subpath %}{% endcapture %}
+      <figure class="post-hero-media">
+        <img src="{{ img_url }}" alt="{{ alt }}">
+        {% if page.image.alt %}
+          <figcaption>{{ page.image.alt }}</figcaption>
+        {% endif %}
+      </figure>
+    {% endif %}
   </header>
 
   {% if enable_toc %}
@@ -121,58 +113,39 @@ script_includes:
     </dialog>
   {% endif %}
 
-  <div class="content">
-    {{ content }}
-  </div>
-
-  <div class="post-tail-wrapper text-muted">
-    <!-- categories -->
-    {% if page.categories.size > 0 %}
-      <div class="post-meta mb-3">
-        <i class="far fa-folder-open fa-fw me-1"></i>
-        {% for category in page.categories %}
-          <a href="{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/">{{ category }}</a>
-          {%- unless forloop.last -%},{%- endunless -%}
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <!-- tags -->
-    {% if page.tags.size > 0 %}
-      <div class="post-tags">
-        <i class="fa fa-tags fa-fw me-1"></i>
-        {% for tag in page.tags %}
-          <a
-            href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
-            class="post-tag no-text-decoration"
-          >
-            {{- tag -}}
-          </a>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    <div
-      class="
-        post-tail-bottom
-        d-flex justify-content-between align-items-center mt-5 pb-2
-      "
-    >
-      <div class="license-wrapper">
-        {% if site.data.locales[lang].copyright.license.template %}
-          {% capture _replacement %}
-        <a href="{{ site.data.locales[lang].copyright.license.link }}">
-          {{ site.data.locales[lang].copyright.license.name }}
-        </a>
-        {% endcapture %}
-
-          {{ site.data.locales[lang].copyright.license.template | replace: ':LICENSE_NAME', _replacement }}
-        {% endif %}
+  <div class="post-layout has-rail">
+    <div class="post-content">
+      <div class="content">
+        {% include refactor-content.html content=content lang=lang %}
       </div>
 
-      {% include post-sharing.html lang=lang %}
+      {% if page.takeaways %}
+        <section class="key-takeaways">
+          <h2>Key takeaways</h2>
+          <ul>
+            {% for item in page.takeaways %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {% if page.categories.size > 0 %}
+        <div class="post-meta post-categories">
+          <span class="meta-label">Category</span>
+          {% for category in page.categories %}
+            <a class="chip" href="{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/">{{ category }}</a>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% include related-posts.html %}
+      {% include post-nav.html %}
     </div>
-    <!-- .post-tail-bottom -->
+
+    {% include post-widgets.html lang=lang %}
   </div>
-  <!-- div.post-tail-wrapper -->
+
+  {% include floating-actions.html lang=lang %}
 </article>
+</div>

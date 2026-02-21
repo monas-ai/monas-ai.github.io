@@ -234,9 +234,11 @@
         | append: _snippet
         | append: '<div class="code-header">'
         | append: _label
+        | append: '<div class="code-actions">'
+        | append: '<button class="wrap-toggle" aria-label="toggle wrap"><i class="fas fa-text-width"></i></button>'
         | append: '<button aria-label="copy" data-title-succeed="'
         | append: site.data.locales[include.lang].post.button.copy_code.succeed
-        | append: '"><i class="far fa-clipboard"></i></button></div>'
+        | append: '"><i class="far fa-clipboard"></i></button></div></div>'
         | append: '<div class="highlight"><code>'
       %}
     {% endif %}
